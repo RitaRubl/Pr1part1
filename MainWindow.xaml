@@ -1,0 +1,37 @@
+﻿<Window x:Class="PracticalWork1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Практическая работа 1" Height="400" Width="600">
+    <Grid Margin="10">
+        <!-- Главное меню -->
+        <Menu HorizontalAlignment="Stretch" VerticalAlignment="Top">
+            <MenuItem Header="Файл">
+                <MenuItem Header="Выход" Click="ExitMenuItem_Click"/>
+            </MenuItem>
+        </Menu>
+
+        <!-- Картинка -->
+        <Image Source="D:/photo_2025-01-26_18-39-56.jpg"
+               HorizontalAlignment="Left" VerticalAlignment="Top"
+               Width="272" Height="85" Margin="0,23,0,0"/>
+
+        <!-- Поле для ввода -->
+        <Label Content="Введите значение:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,150,0,0"/>
+        <TextBox Name="InputTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" Margin="10,170,0,0"/>
+
+        <!-- Поле для результата -->
+        <Label Content="Результат:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,210,0,0"/>
+        <TextBox Name="ResultTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" Margin="10,230,0,0" IsReadOnly="True"/>
+
+        <!-- Радиокнопки -->
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="10,107,0,-57">
+            <RadioButton Name="ShRadioButton" Content="sh(x)" GroupName="Functions"/>
+            <RadioButton Name="SquareRadioButton" Content="x²" GroupName="Functions"/>
+            <RadioButton Name="ExpRadioButton" Content="e^x" GroupName="Functions"/>
+        </StackPanel>
+
+        <!-- Кнопки -->
+        <Button Name="CalculateButton" Content="Вычислить" Width="100" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,270,0,0" Click="CalculateButton_Click"/>
+        <Button Name="ClearButton" Content="Очистить" Width="100" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="120,270,0,0" Click="ClearButton_Click"/>
+    </Grid>
+</Window>
