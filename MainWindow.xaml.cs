@@ -46,14 +46,17 @@ namespace PracticalWork1 {
 
         private double CalculateB(double x, double y, Func<double, double> f) {
             if (y == 0) {
-                return x == 0 ? 0 : Math.Pow(Math.Pow(f(x), 2) + y, 3);
+                return 0;
             }
 
             if (x / y > 0) {
                 return Math.Log(f(x)) + Math.Pow(Math.Pow(f(x), 2) + y, 3);
             }
+            else if (x / y < 0) {
+                return Math.Log(Math.Abs(f(x) / y)) + Math.Pow(f(x) + y, 3);
+            }
             else {
-                return Math.Log(Math.Abs(f(x)) / Math.Abs(y)) + Math.Pow(f(x) + y, 3);
+                return Math.Pow(Math.Pow(f(x), 2) + y, 3);
             }
         }
 
