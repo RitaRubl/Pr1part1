@@ -1,68 +1,66 @@
 ﻿using System;
 using System.Windows;
 
-namespace PracticalWork1
-{
-    public partial class MainWindow : Window
-    {
-        public MainWindow()
-        {
+namespace PracticalWork1 {
+    public partial class MainWindow : Window {
+        public MainWindow() {
             InitializeComponent();
         }
-
-        private void CalculateButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(InputTextBox.Text))
-                {
-                    MessageBox.Show("Введите значение для расчета.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+        private void CalculateButton_Click(object sender, RoutedEventArgs e) {
+            try {
+                if (!double.TryParse(XTextBox.Text, out double x)) {
+                    MessageBox.Show("Введено некорректное значение X!", "Ошибка");
+                    return;
+                }
+                if (!double.TryParse(YTextBox.Text, out double y)) {
+                    MessageBox.Show("Введено некорректное значение Y!", "Ошибка");
                     return;
                 }
 
-                double input = double.Parse(InputTextBox.Text);
-                double result = 0;
-
-                if (ShRadioButton.IsChecked == true)
-                {
-                    result = Math.Sinh(input); // Вычисление гиперболического синуса
-                }
-                else if (SquareRadioButton.IsChecked == true)
-                {
-                    result = Math.Pow(input, 2); // Квадрат числа
-                }
-                else if (ExpRadioButton.IsChecked == true)
-                {
-                    result = Math.Exp(input); // Экспонента
+                Func<double, double> selectedFunction = SelectFunction();
+                if (selectedFunction == null) {
+                    MessageBox.Show("Пожалуйста, выберите функцию");
+                    return;
                 }
 
-                ResultTextBox.Text = result.ToString(); // Вывод результата
+                double result = CalculateB(x, y, selectedFunction);
+                ResultTextBox.Text = result.ToString("F4");
             }
-            catch (FormatException)
-            {
-                MessageBox.Show("Введите корректное числовое значение.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            catch (Exception ex) {
+                MessageBox.Show($"Ошибка: {ex.Message}");
             }
         }
 
-        private void ClearButton_Click(object sender, RoutedEventArgs e)
-        {
-            InputTextBox.Clear();
-            ResultTextBox.Clear();
-            ShRadioButton.IsChecked = false;
-            SquareRadioButton.IsChecked = false;
-            ExpRadioButton.IsChecked = false;
+        private void ClearButton_Click(object sender, RoutedEventArgs e) {
+            XTextBox.Clear();
+            YTextBox.Clear();
+            ResultTextBox.Text = "0";
         }
 
-        private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            var result = MessageBox.Show("Вы уверены, что хотите выйти?",
-                                         "Подтверждение",
-                                         MessageBoxButton.YesNo,
-                                         MessageBoxImage.Question);
+        private Func<double, double> SelectFunction() {
+            if (ShRadioButton.IsChecked == true) return Math.Sinh;
+            if (SquareRadioButton.IsChecked == true) return x => Math.Pow(x, 2);
+            if (ExpRadioButton.IsChecked == true) return Math.Exp;
+            return null;
+        }
 
-            if (result == MessageBoxResult.Yes)
-            {
-                Application.Current.Shutdown();
+        private double CalculateB(double x, double y, Func<double, double> f) {
+            if (y == 0) {
+                return x == 0 ? 0 : Math.Pow(Math.Pow(f(x), 2) + y, 3);
+            }
+
+            if (x / y > 0) {
+                return Math.Log(f(x)) + Math.Pow(Math.Pow(f(x), 2) + y, 3);
+            }
+            else {
+                return Math.Log(Math.Abs(f(x)) / Math.Abs(y)) + Math.Pow(f(x) + y, 3);
+            }
+        }
+
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+            MessageBoxResult result = MessageBox.Show("Вы точно хотите выйти?", "Осторожно", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.No) {
+                e.Cancel = true;
             }
         }
     }
